@@ -1,18 +1,33 @@
-package ninja.ard.bfdata;
+package ninja.ard.bfdata.btce;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import ninja.ard.bfdata.IQuoteDataContainer;
+import ninja.ard.bfdata.IQuotePuller;
+import ninja.ard.bfdata.JsonReader;
+
+
+/**
+ * Implementation class that pulls quotes for BTCe and 
+ * creates quote data containers.
+ * 
+ * 
+ * @author ard
+ *
+ */
 public class BtceQuotePuller implements IQuotePuller {
 	
 	private Long msThrottleBetweenCalls = 500L;
 	private Map<String, String> pairs = new HashMap<String, String>();
 	private String masterPairUrl = null;
-	private List<String> pairsInMaster = null;
+	private Set<String> pairsInMaster = null;
 	
 	private JSONObject getJsonFromURL(String url) throws Exception {
 		JsonReader jr = new JsonReader();
@@ -31,7 +46,7 @@ public class BtceQuotePuller implements IQuotePuller {
 		pairs.put(pairCode, url);
 	}
 	
-	public void setMasterUrl(String url, List<String> pairsAtEndpoint) {
+	public void setMasterUrl(String url, Set<String> pairsAtEndpoint) {
 		this.masterPairUrl = url;
 		this.pairsInMaster = pairsAtEndpoint;
 	}
@@ -50,10 +65,19 @@ public class BtceQuotePuller implements IQuotePuller {
 		List<IQuoteDataContainer> quotes = new ArrayList<IQuoteDataContainer>();
 		if(masterPairUrl == null || pairsInMaster == null ) 
 			throw new Exception("Master pair list not set");
+		
 		JSONObject res = getJsonFromURL(masterPairUrl);
-		// look through res, pull out each quote
-		for(String pair : pairsInMaster) {
+		
+		for(String key : res.keySet()){
+			JSONObject quoteData = res.getJSONObject(key);
+			BtceQuote quote = new BtceQuote();
+			quote.setCurrencyPair(key);
+			quote.setData(quoteData);
 			
+			quotes.add(quote);
+			if(quote.getLast() == null) {
+				throw new Exception("Quote last set incorrectly set for pair: " + key);
+			}
 		}
 		return quotes;
 	}
