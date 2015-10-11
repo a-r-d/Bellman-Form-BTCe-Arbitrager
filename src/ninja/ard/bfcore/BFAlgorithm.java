@@ -62,17 +62,39 @@ public class BFAlgorithm {
 	}
 	
 	
-	public void bellmanFord(String startNode, String endNode) throws Exception{
-		CurrencyNode start = null;
-		CurrencyNode end = null;
+	private CurrencyNode findNode(String nodeName) {
+		CurrencyNode node = null;
 		for(String nodeKey : nodeMap.keySet()) {
-			if(nodeKey.equals(startNode)) {
-				start = nodeMap.get(nodeKey);
-			}
-			if(nodeKey.equals(endNode)) {
-				end = nodeMap.get(nodeKey);
+			if(nodeKey.equals(nodeName)) {
+				node = nodeMap.get(nodeName);
 			}
 		}
+		return node;
+	}
+	
+	public void negativeCycle(String startNode) throws Exception{
+		CurrencyNode node = findNode(startNode);
+		if(node == null) {
+			throw new Exception("One of the nodes provided was not found in the node map");
+		}
+		negativeCycle(node);
+	}
+	
+	/***
+	 * First runs bellman ford, then 
+	 * Computes any negative cycles containing the given node
+	 * 
+	 * @param start
+	 */
+	public void negativeCycle(CurrencyNode start) {
+		
+		
+	}
+	
+	public void bellmanFord(String startNode, String endNode) throws Exception{
+		CurrencyNode start = findNode(startNode);
+		CurrencyNode end = findNode(endNode);
+		
 		if(start == null || end == null) {
 			throw new Exception("One of the nodes provided was not found in the node map");
 		}

@@ -81,5 +81,7 @@ public class BtceQuotePuller implements IQuotePuller {
 		}
 		return quotes;
 	}
+	
+	
 
 }
