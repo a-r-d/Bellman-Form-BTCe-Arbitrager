@@ -1,4 +1,4 @@
-package ninja.ard.bfcore;
+package ninja.ard.bfcore.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,16 @@ public class CurrencyNode {
 	public CurrencyNode previous;
 	public Double minDistance = Double.MAX_VALUE;
 	
-	public List<CurrencyEdge> edges = new ArrayList<>();
+	public List<CurrencyEdge> adjacencies = new ArrayList<>();
+	
+	public List<CurrencyNode> getNeighbors(){
+		List<CurrencyNode> nodes = new ArrayList<CurrencyNode>();
+		for(CurrencyEdge edge : adjacencies) {
+			edge.toNode.previous = this;
+			nodes.add(edge.toNode);
+		}
+		return nodes;
+	}
 	
 	@Override
 	public int hashCode() {

@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ninja.ard.bfcore.dto.CurrencyEdge;
+import ninja.ard.bfcore.dto.CurrencyGraph;
+import ninja.ard.bfcore.dto.CurrencyNode;
+import ninja.ard.bfcore.tradebeans.CurrencyCycle;
 import ninja.ard.bfdata.IQuoteDataContainer;
 
 /**
@@ -17,63 +21,14 @@ import ninja.ard.bfdata.IQuoteDataContainer;
  */
 public class BFAlgorithm {
 
-	List<IQuoteDataContainer> quotes;
-	HashMap<String, CurrencyNode> nodeMap = new HashMap<>(); 	// a node for each currency
-	Set<CurrencyEdge> edges = new HashSet<>();					// an edge for each pair.
+	CurrencyGraph graph;
 	
-	public BFAlgorithm(List<IQuoteDataContainer> quotes) {
-		this.quotes = quotes;
-		init();
+	public BFAlgorithm(CurrencyGraph graph) {
+		this.graph = graph;
 	}
-	
-	private void init(){
-		nodeMap = new HashMap<>();
-		edges = new HashSet<>();
-		for(IQuoteDataContainer quote: quotes) {
-			// each quote will be an edge and maybe two nodes.
-			// the nodes will go into a hashmap so that we can quickly grab them
-			CurrencyNode start = null;
-			CurrencyNode end = null;
-			CurrencyEdge edge = new CurrencyEdge();
-			// init start
-			if(nodeMap.containsKey(quote.getStartCurrency()))  {
-				start = nodeMap.get(quote.getStartCurrency());
-			} else {
-				start = new CurrencyNode();
-				start.currency = quote.getStartCurrency();
-				nodeMap.put(quote.getStartCurrency(), start);
-			}
-			// init end
-			if(nodeMap.containsKey(quote.getEndCurrency()))  {
-				end = nodeMap.get(quote.getEndCurrency());
-			} else {
-				end = new CurrencyNode();
-				end.currency = quote.getEndCurrency();
-				nodeMap.put(quote.getEndCurrency(), end);
-			}
-			
-			// init edges, this is a directed graph so we will only add edges to the start nodes.
-			edge.fromNode = start;
-			edge.toNode = end;
-			edge.quote = quote;
-			edge.weight = quote.getLast();
-			edges.add(edge);
-		}
-	}
-	
-	
-	private CurrencyNode findNode(String nodeName) {
-		CurrencyNode node = null;
-		for(String nodeKey : nodeMap.keySet()) {
-			if(nodeKey.equals(nodeName)) {
-				node = nodeMap.get(nodeName);
-			}
-		}
-		return node;
-	}
-	
+
 	public void negativeCycle(String startNode) throws Exception{
-		CurrencyNode node = findNode(startNode);
+		CurrencyNode node = graph.findNode(startNode);
 		if(node == null) {
 			throw new Exception("One of the nodes provided was not found in the node map");
 		}
@@ -91,22 +46,22 @@ public class BFAlgorithm {
 		
 	}
 	
-	public void bellmanFord(String startNode, String endNode) throws Exception{
-		CurrencyNode start = findNode(startNode);
-		CurrencyNode end = findNode(endNode);
+	public CurrencyCycle bellmanFord(String startNode, String endNode) throws Exception{
+		CurrencyNode start = graph.findNode(startNode);
+		CurrencyNode end = graph.findNode(endNode);
 		
 		if(start == null || end == null) {
 			throw new Exception("One of the nodes provided was not found in the node map");
 		}
-		bellmanFord(start, end);
+		return bellmanFord(start, end);
 	}
 	
-	public void bellmanFord(CurrencyNode start, CurrencyNode end){
+	public CurrencyCycle bellmanFord(CurrencyNode start, CurrencyNode end){
 		// start from 0.0
 		start.minDistance = 0.0;
 		
-		for(CurrencyNode node : nodeMap.values()) {
-			for(CurrencyEdge edge : edges) {
+		for(CurrencyNode node : graph.getNodeMap().values()) {
+			for(CurrencyEdge edge : graph.getEdges()) {
 				
 				if(edge.fromNode.minDistance.equals(Double.MAX_VALUE)) {
 					continue;
@@ -121,12 +76,28 @@ public class BFAlgorithm {
 		}
 		
 		// find cycles
-		for(CurrencyEdge edge : edges) {
+		for(CurrencyEdge edge : graph.getEdges()) {
 			if(edge.fromNode.minDistance.equals(Double.MAX_VALUE) == false) {
 				if(hasCycle(edge)){
-					// TODO: do something when there is a negative cycle.
-					// this is what we are looking for!
-					System.out.println("Negative cycle found...");
+					CurrencyNode endNode = edge.toNode;
+					CurrencyNode current = endNode;
+					
+					StringBuilder builder = new StringBuilder();
+					builder.append("Negative cycle path: [");
+					CurrencyCycle cycle = new CurrencyCycle();
+					while(current.previous != null) {
+						builder.append(current.toString() + "-");
+						current = current.previous;
+						cycle.addTrade(current, current.previous);
+						if(current.equals(endNode)) {
+							builder.append(current.toString() + "]");
+							break;
+						}
+					}
+					System.out.println("Negative cycle found... Breaking: ");
+					System.out.println(builder.toString());
+					System.out.println(cycle.printTrades());
+					return cycle;
 				}
 			}
 		}
@@ -134,16 +105,18 @@ public class BFAlgorithm {
 		// Find shortest path
 		if (end.minDistance != Double.MAX_VALUE) {
 			System.out.println("There is a shortest path from source to target, with cost: " + end.minDistance);
-			
+			StringBuilder builder = new StringBuilder();
 			CurrencyNode actualVertex = end;
 			while( actualVertex.previous != null ){
-				System.out.print(actualVertex+"-");
+				builder.append(actualVertex+"-");
 				actualVertex = actualVertex.previous;
 			}
+			System.out.println(builder.toString());
 			
 		} else {
 			System.out.println("There is no path from source to target...");
 		}
+		return null; // no cycle
 	}
 	
 	private boolean hasCycle(CurrencyEdge edge){
