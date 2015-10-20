@@ -25,7 +25,7 @@ import org.json.JSONObject;
 public interface IQuoteDataContainer {
 
 	// should record here when data is set
-	public void setData(JSONObject jsonData);
+	public void setData(JSONObject jsonData) throws Exception;
 	
 	public String getCurrencyPairCode();
 	

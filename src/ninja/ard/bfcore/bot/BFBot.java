@@ -12,12 +12,13 @@ import ninja.ard.bfcore.tradebeans.CurrencyCycle;
 import ninja.ard.bfdata.IQuoteDataContainer;
 import ninja.ard.bfdata.btce.BtceQuotePuller;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 
 public class BFBot {
+	final static Logger logger = Logger.getLogger(BFBot.class);
 	
-	
-	public void runAlgo() throws Exception{
+	public CurrencyCycle runAlgo() throws Exception{
 		String allPairsUrl = "https://btc-e.com/api/3/ticker/btc_usd-btc_rur-btc_eur-eur_rur-usd_rur-eur_usd";
 		allPairsUrl += "?cache=" + Math.random();
 		
@@ -35,11 +36,17 @@ public class BFBot {
 		// Add to algorithm
 		BFAlgorithm algo = new BFAlgorithm(graph);
 		CurrencyCycle cycle = algo.bellmanFord("USD", "BTC");
+		
+		puller = null;
+		algo = null;
+		graph = null;
+		return cycle;
 	}
 	
 	
 	public static void main(String[] args) throws Exception{
-		
+		logger.info("Starting bot...");
+
 		while(true) {
 			BFBot bot = new BFBot();
 			bot.runAlgo();

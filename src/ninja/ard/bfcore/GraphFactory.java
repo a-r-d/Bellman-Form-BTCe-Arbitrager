@@ -1,11 +1,11 @@
 package ninja.ard.bfcore;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.prefs.BackingStoreException;
+
+import org.apache.log4j.Logger;
 
 import ninja.ard.bfcore.dto.CurrencyEdge;
 import ninja.ard.bfcore.dto.CurrencyGraph;
@@ -14,8 +14,10 @@ import ninja.ard.bfdata.IQuoteDataContainer;
 
 public class GraphFactory {
 
-	// flag for testing
-	private static boolean useLastPriceForWeight = true;
+	final static Logger logger = Logger.getLogger(GraphFactory.class);
+
+	// flag for testing. The correct method is to use Bid/Ask always
+	private static boolean useLastPriceForWeight = false;
 	
 	public static CurrencyGraph buildUndirectedCurrencyGraph(List<IQuoteDataContainer> quotes){
 		
@@ -82,6 +84,7 @@ public class GraphFactory {
 	 * 
 	 * Remember, invert ... log of less than 1 yields a negative num, so that we will be able to build a negative cycle.
 	 * 
+	 * The result must be multiplied by negative 1
 	 * 
 	 * @param quote
 	 * @return
@@ -94,9 +97,9 @@ public class GraphFactory {
 			return Math.log10(1 / quote.getBid());
 		} else {
 			if(useLastPriceForWeight) {
-				Math.log10(quote.getLast());
+				return Math.log10(quote.getLast());
 			}
-			return Math.log10(quote.getAsk());
+			return  Math.log10(quote.getAsk());
 		}
 	}
 	

@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import ninja.ard.bfcore.bot.BFBot;
 import ninja.ard.bfcore.dto.CurrencyEdge;
 import ninja.ard.bfcore.dto.CurrencyGraph;
 import ninja.ard.bfcore.dto.CurrencyNode;
@@ -22,6 +25,8 @@ import ninja.ard.bfdata.IQuoteDataContainer;
 public class BFAlgorithm {
 
 	CurrencyGraph graph;
+	final static Logger logger = Logger.getLogger(BFAlgorithm.class);
+
 	
 	public BFAlgorithm(CurrencyGraph graph) {
 		this.graph = graph;
@@ -85,6 +90,9 @@ public class BFAlgorithm {
 					StringBuilder builder = new StringBuilder();
 					builder.append("Negative cycle path: [");
 					CurrencyCycle cycle = new CurrencyCycle();
+					
+					// TODO: why is this going into infinite loops... How is the edge having a cycle 
+					// when but the edge.toNode itself is not in the cycle??
 					while(current.previous != null) {
 						builder.append(current.toString() + "-");
 						current = current.previous;
@@ -94,27 +102,27 @@ public class BFAlgorithm {
 							break;
 						}
 					}
-					System.out.println("Negative cycle found... Breaking: ");
-					System.out.println(builder.toString());
-					System.out.println(cycle.printTrades());
+					logger.info("Negative cycle found... Breaking: " + builder.toString());
+					logger.info(cycle.printTrades());
 					return cycle;
 				}
 			}
 		}
+		logger.info("No negative cycles found...");
 		
 		// Find shortest path
 		if (end.minDistance != Double.MAX_VALUE) {
-			System.out.println("There is a shortest path from source to target, with cost: " + end.minDistance);
+			logger.debug("There is a shortest path from source to target, with cost: " + end.minDistance);
 			StringBuilder builder = new StringBuilder();
 			CurrencyNode actualVertex = end;
 			while( actualVertex.previous != null ){
 				builder.append(actualVertex+"-");
 				actualVertex = actualVertex.previous;
 			}
-			System.out.println(builder.toString());
+			logger.debug(builder.toString());
 			
 		} else {
-			System.out.println("There is no path from source to target...");
+			logger.error("There is no path from source to target...");
 		}
 		return null; // no cycle
 	}

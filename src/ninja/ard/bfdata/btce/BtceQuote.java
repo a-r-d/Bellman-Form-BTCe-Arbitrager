@@ -33,7 +33,7 @@ public class BtceQuote implements IQuoteDataContainer {
 	}
 	
 	@Override
-	public void setData(JSONObject jsonData) {
+	public void setData(JSONObject jsonData) throws Exception{
 		this.data = jsonData;
 		this.ask = jsonData.getDouble("buy");
 		this.bid = jsonData.getDouble("sell");

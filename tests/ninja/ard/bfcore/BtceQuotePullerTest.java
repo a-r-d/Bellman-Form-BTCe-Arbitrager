@@ -38,6 +38,7 @@ public class BtceQuotePullerTest {
 		Assert.assertNotNull(cycle);
 	}
 	
+	@Ignore
 	@Test
 	public void test_getAllPairs_Mocked_has_NO_cycle() throws Exception {
 		MockedBtceQuotePuller puller = new MockedBtceQuotePuller();

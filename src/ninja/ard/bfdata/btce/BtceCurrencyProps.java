@@ -4,7 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
+import ninja.ard.bfcore.bot.BFBot;
+
 public class BtceCurrencyProps {
+
+	final static Logger logger = Logger.getLogger(BtceCurrencyProps.class);
 
 	public static final Properties props = new Properties();
 	
@@ -12,7 +18,7 @@ public class BtceCurrencyProps {
 		try{
 			props.load(new FileInputStream(new File("btce.properties")));
 		}catch( Exception e) {
-			System.out.println(e.getMessage());
+			logger.error(e.getMessage());
 		}
 	}
 	

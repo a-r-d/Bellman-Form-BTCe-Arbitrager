@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -44,8 +45,9 @@ public class MockedBtceQuotePuller implements IQuotePuller{
 		String jsonText = readAll(rd);
 		JSONObject json = new JSONObject(jsonText);
 		
-		// convert to quotes
-		for(String key : json.keySet()){
+		Iterator<String> iter = json.keys();
+		while(iter.hasNext()){
+			String key = iter.next();
 			JSONObject quoteData = json.getJSONObject(key);
 			BtceQuote quote = new BtceQuote();
 			quote.setCurrencyPair(key);

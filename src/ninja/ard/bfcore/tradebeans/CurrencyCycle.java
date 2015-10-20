@@ -30,6 +30,7 @@ public class CurrencyCycle {
 		// do stuff
 		int i = 0;
 		double start = 100.0;
+		builder.append("[printing trades]");
 		for(CurrencyTrade t : trades) {
 			i++;
 			builder.append("Trade " + i + 
