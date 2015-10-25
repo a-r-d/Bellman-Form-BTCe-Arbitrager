@@ -33,4 +33,12 @@ public class CurrencyNode {
 	public String toString() {
 		return currency;
 	}
+	
+	public boolean equals(CurrencyNode othernode) {
+		// TODO Auto-generated method stub
+		if(othernode == null || othernode.currency == null) {
+			return false;
+		}
+		return othernode.currency.equals(currency);
+	}
 }

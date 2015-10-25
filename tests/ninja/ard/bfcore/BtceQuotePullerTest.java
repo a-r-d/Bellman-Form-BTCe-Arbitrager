@@ -31,14 +31,28 @@ public class BtceQuotePullerTest {
 			Assert.assertNotNull(quote.getTimestamp());
 		}
 		
+		GraphFactory.setUseLastPriceForWeight(false);
 		CurrencyGraph graph = GraphFactory.buildUndirectedCurrencyGraph(quotes);
 		// Add to algorithm
 		BFAlgorithm algo = new BFAlgorithm(graph);
 		CurrencyCycle cycle = algo.bellmanFord("USD", "BTC");
 		Assert.assertNotNull(cycle);
+		
+		// now make it use LAST quote price
+		GraphFactory.setUseLastPriceForWeight(false);
+		graph = GraphFactory.buildUndirectedCurrencyGraph(quotes);
+		algo = new BFAlgorithm(graph);
+		cycle = algo.bellmanFord("USD", "BTC");
+		Assert.assertNotNull(cycle);
+		if(cycle != null && cycle.getPotentialProfitPercentage() > 0) {
+			cycle.logTrades();
+			cycle.logExampleProfit();
+		} else if(cycle != null && cycle.getPotentialProfitPercentage() < 0) {
+			cycle.logExampleProfit();
+		}
 	}
 	
-	@Ignore
+	
 	@Test
 	public void test_getAllPairs_Mocked_has_NO_cycle() throws Exception {
 		MockedBtceQuotePuller puller = new MockedBtceQuotePuller();
@@ -52,6 +66,7 @@ public class BtceQuotePullerTest {
 			Assert.assertNotNull(quote.getTimestamp());
 		}
 		
+		GraphFactory.setUseLastPriceForWeight(false);
 		CurrencyGraph graph = GraphFactory.buildUndirectedCurrencyGraph(quotes);
 		// Add to algorithm
 		BFAlgorithm algo = new BFAlgorithm(graph);
@@ -60,7 +75,8 @@ public class BtceQuotePullerTest {
 	}
 	
 
-	
+	// don't run against the remove server normally.
+	@Ignore
 	@Test
 	public void test_getAllPairs() throws Exception {
 		String allPairsUrl = "https://btc-e.com/api/3/ticker/btc_usd-btc_rur-btc_eur-eur_rur-usd_rur-eur_usd";
@@ -87,7 +103,6 @@ public class BtceQuotePullerTest {
 		// Add to algorithm
 		BFAlgorithm algo = new BFAlgorithm(graph);
 		algo.bellmanFord("USD", "BTC");
-		//algo.bellmanFord("USD", "LTC");
 		algo.bellmanFord("USD", "EUR");
 		algo.bellmanFord("USD", "RUR");
 		 

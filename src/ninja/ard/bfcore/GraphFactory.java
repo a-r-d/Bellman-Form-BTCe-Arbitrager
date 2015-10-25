@@ -16,7 +16,7 @@ public class GraphFactory {
 
 	final static Logger logger = Logger.getLogger(GraphFactory.class);
 
-	// flag for testing. The correct method is to use Bid/Ask always
+	// flag is ONLY for testing! The correct method is to use Bid/Ask always!
 	private static boolean useLastPriceForWeight = false;
 	
 	public static CurrencyGraph buildUndirectedCurrencyGraph(List<IQuoteDataContainer> quotes){
@@ -102,5 +102,15 @@ public class GraphFactory {
 			return  Math.log10(quote.getAsk());
 		}
 	}
+
+	public static boolean isUseLastPriceForWeight() {
+		return useLastPriceForWeight;
+	}
+
+	public static void setUseLastPriceForWeight(boolean useLastPriceForWeight) {
+		GraphFactory.useLastPriceForWeight = useLastPriceForWeight;
+	}
+	
+	
 	
 }

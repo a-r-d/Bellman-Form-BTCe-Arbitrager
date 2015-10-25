@@ -1,18 +1,13 @@
 package ninja.ard.bfcore;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import ninja.ard.bfcore.bot.BFBot;
 import ninja.ard.bfcore.dto.CurrencyEdge;
 import ninja.ard.bfcore.dto.CurrencyGraph;
 import ninja.ard.bfcore.dto.CurrencyNode;
 import ninja.ard.bfcore.tradebeans.CurrencyCycle;
-import ninja.ard.bfdata.IQuoteDataContainer;
 
 /**
  * Build with list of quotes which will be converted into a set of
@@ -26,7 +21,7 @@ public class BFAlgorithm {
 
 	CurrencyGraph graph;
 	final static Logger logger = Logger.getLogger(BFAlgorithm.class);
-
+	Properties properties;
 	
 	public BFAlgorithm(CurrencyGraph graph) {
 		this.graph = graph;
@@ -84,31 +79,37 @@ public class BFAlgorithm {
 		for(CurrencyEdge edge : graph.getEdges()) {
 			if(edge.fromNode.minDistance.equals(Double.MAX_VALUE) == false) {
 				if(hasCycle(edge)){
-					CurrencyNode endNode = edge.toNode;
+					CurrencyNode endNode = edge.fromNode;
 					CurrencyNode current = endNode;
 					
 					StringBuilder builder = new StringBuilder();
 					builder.append("Negative cycle path: [");
 					CurrencyCycle cycle = new CurrencyCycle();
+					if(properties != null) {
+						cycle = new CurrencyCycle(properties);
+					}
 					
-					// TODO: why is this going into infinite loops... How is the edge having a cycle 
-					// when but the edge.toNode itself is not in the cycle??
+					int iter = 0;
 					while(current.previous != null) {
-						builder.append(current.toString() + "-");
 						current = current.previous;
+						builder.append(current.toString() + "-");
 						cycle.addTrade(current, current.previous);
-						if(current.equals(endNode)) {
-							builder.append(current.toString() + "]");
+						if(cycle.startsAt(current.previous) && iter != 0) {
+							builder.append(current.previous.toString() + "]");
+							break;
+						}
+						iter++;
+						if(iter > graph.getNodeMap().size()) {
+							logger.error("Error: infinite cycle occurred... ");
 							break;
 						}
 					}
-					logger.info("Negative cycle found... Breaking: " + builder.toString());
-					logger.info(cycle.printTrades());
+					logger.info("Negative cycle found: " + builder.toString());
 					return cycle;
 				}
 			}
 		}
-		logger.info("No negative cycles found...");
+		logger.info("Analysis complete, No negative cycles found...");
 		
 		// Find shortest path
 		if (end.minDistance != Double.MAX_VALUE) {
@@ -129,6 +130,14 @@ public class BFAlgorithm {
 	
 	private boolean hasCycle(CurrencyEdge edge){
 		return edge.toNode.minDistance > edge.fromNode.minDistance + edge.weight;
+	}
+
+	public Properties getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
 	}
 	
 }
