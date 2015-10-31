@@ -1,6 +1,6 @@
 package ninja.ard.trading.btce;
 
-public class CurrencyTrade extends Trade {
+public class BtceCurrencyTrade extends Trade {
 
 	String baseCurrency;
 	String toCurrency;

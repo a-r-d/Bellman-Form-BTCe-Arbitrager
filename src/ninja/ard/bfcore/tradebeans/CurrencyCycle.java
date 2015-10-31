@@ -62,6 +62,10 @@ public class CurrencyCycle {
 		return  transactionFeePercentage * trades.size();
 	}
 	
+	/**
+	 * In a percentage
+	 * @return
+	 */
 	public double getPotentialProfitMinusFees() {
 		double profit = getPotentialProfitPercentage();
 		double fees = getFeesPercentage();
