@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import ninja.ard.bfcore.bot.BFBot;
+import ninja.ard.bfcore.bot.BtceBFBot;
 import ninja.ard.bfdata.IQuoteDataContainer;
 import ninja.ard.bfdata.IQuotePuller;
 import ninja.ard.bfdata.JsonReader;

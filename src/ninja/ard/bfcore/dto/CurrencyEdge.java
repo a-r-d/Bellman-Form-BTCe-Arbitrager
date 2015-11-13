@@ -17,17 +17,17 @@ public class CurrencyEdge {
 	
 	@Override
 	public int hashCode() {
-		return fromNode.currency.hashCode() + toNode.currency.hashCode();
+		return fromNode.getCurrency().hashCode() + toNode.getCurrency().hashCode();
 	}
 	
 	
 	public boolean equals(CurrencyEdge otherEdge) {
-		return fromNode.currency.equals(otherEdge.fromNode.currency) && toNode.currency.equals(otherEdge.toNode.currency);
+		return fromNode.getCurrency().equals(otherEdge.fromNode.getCurrency()) && toNode.getCurrency().equals(otherEdge.toNode.getCurrency());
 	}
 	
 	@Override
 	public String toString() {
-		return "From: " + fromNode.currency + " to: " + toNode.currency + " rate: " + weight;
+		return "From: " + fromNode.getCurrency() + " to: " + toNode.getCurrency() + " rate: " + weight;
 	}
 	
 }

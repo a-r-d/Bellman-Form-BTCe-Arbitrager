@@ -6,7 +6,7 @@ import java.util.List;
 public class CurrencyNode {
 
 	// The identity data.
-	public String currency;
+	private String currency;
 	
 	// used in algorithm
 	public boolean visited;
@@ -41,4 +41,15 @@ public class CurrencyNode {
 		}
 		return othernode.currency.equals(currency);
 	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+	
+	
+	
 }

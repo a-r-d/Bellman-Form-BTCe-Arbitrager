@@ -39,7 +39,7 @@ public class GraphFactory {
 				start = nodeMap.get(quote.getStartCurrency());
 			} else {
 				start = new CurrencyNode();
-				start.currency = quote.getStartCurrency();
+				start.setCurrency(quote.getStartCurrency());
 				nodeMap.put(quote.getStartCurrency(), start);
 			}
 			// init END NODE (backward)
@@ -47,7 +47,7 @@ public class GraphFactory {
 				end = nodeMap.get(quote.getEndCurrency());
 			} else {
 				end = new CurrencyNode();
-				end.currency = quote.getEndCurrency();
+				end.setCurrency(quote.getEndCurrency());
 				nodeMap.put(quote.getEndCurrency(), end);
 			}
 			

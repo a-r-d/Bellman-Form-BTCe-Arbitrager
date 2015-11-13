@@ -23,5 +23,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/TradeApi.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

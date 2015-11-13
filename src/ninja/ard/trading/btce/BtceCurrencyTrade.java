@@ -4,7 +4,8 @@ public class BtceCurrencyTrade extends Trade {
 
 	String baseCurrency;
 	String toCurrency;
-	String pairCode;
+	String pairCode; // e.g. btc_usd
+	String orderType; // buy or sell
 	String endpoint;
 	
 	double targetPrice;
@@ -77,7 +78,20 @@ public class BtceCurrencyTrade extends Trade {
 	public void setCurrentDeviation(int currentDeviation) {
 		this.currentDeviation = currentDeviation;
 	}
+
+	public String getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
+	}
 	
 	
+	// sell btc_usd @ 250 usd
+	@Override
+	public String toString() {
+		return  orderType + " " + pairCode + " @ " + targetPrice + " " + baseCurrency; 
+	}
 	
 }

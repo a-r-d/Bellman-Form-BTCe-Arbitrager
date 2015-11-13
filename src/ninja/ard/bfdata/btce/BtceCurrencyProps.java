@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import ninja.ard.bfcore.bot.BFBot;
+import ninja.ard.bfcore.bot.BtceBFBot;
 
 public class BtceCurrencyProps {
 

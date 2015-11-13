@@ -86,7 +86,7 @@ public class CurrencyCycle {
 		}
 	}
 	
-	public void logTrades(){
+	public String getTradesString() {
 		StringBuilder builder = new StringBuilder();
 		// do stuff
 		int i = 0;
@@ -99,7 +99,11 @@ public class CurrencyCycle {
 					" to=" + t.getTo().toString() + 
 					" cost=" + t.getCost().quote.getLast());
 		}
-		logger.info(builder.toString());
+		return builder.toString();
+	}
+	
+	public void logTrades(){
+		logger.info(getTradesString());
 	}
 	
 	public boolean startsAt(CurrencyNode node) {

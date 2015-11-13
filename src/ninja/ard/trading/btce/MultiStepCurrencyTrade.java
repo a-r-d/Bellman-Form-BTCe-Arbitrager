@@ -37,7 +37,7 @@ public class MultiStepCurrencyTrade extends MultiStepTrade{
 		trades = new ArrayList<>();
 		
 		// currency cycle has to start with the base
-		if(!currencyCycle.getTrades().get(0).getFrom().currency.equals(baseCurrency)) {
+		if(!currencyCycle.getTrades().get(0).getFrom().getCurrency().equals(baseCurrency)) {
 			throw new Exception("Initial step is not the base currency");
 		} 
 		
@@ -56,11 +56,15 @@ public class MultiStepCurrencyTrade extends MultiStepTrade{
 		type	order type	buy or sell
 		rate	the rate at which you need to buy/sell	numerical
 		amount	the amount you need to buy / sell	numerical
-
-
 	 */
 	
 	// TODO: build in the code to find the enpoints and the allowable percentages.
+	/**
+	 * This converts trade data to everything we need to do a trade!
+	 * 
+	 * @param rawTradeData
+	 * @return
+	 */
 	private BtceCurrencyTrade buildTradeData(CurrencyTrade rawTradeData) {
 		BtceCurrencyTrade trade = new BtceCurrencyTrade();
 		
@@ -68,8 +72,48 @@ public class MultiStepCurrencyTrade extends MultiStepTrade{
 		// type - buy or sell
 		// rate - price
 		// amount - numerical amount in correct units.
+		trade.setBaseCurrency(rawTradeData.getFrom().getCurrency());
+		trade.setPairCode(rawTradeData.getPair());
+		trade.setOrderType(rawTradeData.getOrderType());
+		trade.setTargetPrice(rawTradeData.getCost().weight);
 		
 		return trade;
 	}
+
+	public CurrencyCycle getCurrencyCycle() {
+		return currencyCycle;
+	}
+
+	public void setCurrencyCycle(CurrencyCycle currencyCycle) {
+		this.currencyCycle = currencyCycle;
+	}
+
+	public String getBaseCurrency() {
+		return baseCurrency;
+	}
+
+	public void setBaseCurrency(String baseCurrency) {
+		this.baseCurrency = baseCurrency;
+	}
+
+	public double getBaseCurrencyOrderSize() {
+		return baseCurrencyOrderSize;
+	}
+
+	public void setBaseCurrencyOrderSize(double baseCurrencyOrderSize) {
+		this.baseCurrencyOrderSize = baseCurrencyOrderSize;
+	}
+
+	public List<BtceCurrencyTrade> getTrades() {
+		return trades;
+	}
+
+	public void setTrades(List<BtceCurrencyTrade> trades) {
+		this.trades = trades;
+	}
+	
+	
+	
+	
 	
 }
