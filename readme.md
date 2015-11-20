@@ -87,7 +87,7 @@ but I think it is almost impossible to implement a decent market maker on percen
 
 Anyway, I don't think this little bot will help you end up like this guy:
 
-[Imgur](http://i.imgur.com/l2yHhVN.jpg)
+![Gordon Gekko](http://i.imgur.com/l2yHhVN.jpg?raw=true)
 
 
 
