@@ -7,7 +7,7 @@ markets on btc-e and other exchanges).
 
 Typically the trades the bot finds are less than 0.5% profit, will take 3 steps, and must be filled quickly to be profitable.
 
-The main entry point into the application is the class *BtceBFBot.java* which is a reference implementation and runs the BFAlgorithm
+The main entry point into the application is the class __BtceBFBot.java__ which is a reference implementation and runs the BFAlgorithm
 against Btc-e.com exchange public API in a loop. 
 
 
