@@ -20,7 +20,7 @@ and profitable cycles are detected via the eponymous algorithm. Each currency is
 each exchange rate is represented as an Edge. The graph is a directed graph but each node will always have 
 reciprocal edges so it may thought of as cyclic and undirected.
 
-[Imgur](http://i.imgur.com/mOfvbwE.jpg)
+![Example Diagram](/docs/example-forex-trade.jpg?raw=true)
 
 
 Application Structure
