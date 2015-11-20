@@ -56,7 +56,7 @@ public class BtceBFBot {
 		return cycle;
 	}
 	
-	
+	// This is an example, the implementation is not complete.
 	public void runTradeExecutor(CurrencyCycle cycle) throws Exception{
 		MultiStepCurrencyTrade trades = new MultiStepCurrencyTrade("usd", 100, cycle);
 		BtceMultiStepTradeExecutor executor = new BtceMultiStepTradeExecutor(trades);
@@ -72,6 +72,8 @@ public class BtceBFBot {
 			CurrencyCycle cycle = bot.runAlgo();
 			if(cycle != null && cycle.getPotentialProfitMinusFees() > 0.2 && cycle.getTrades().size() == 3) {
 				logger.error("Profitable trade: " + cycle.getTradesString());
+				
+				// If you were to run the executor - here is where you would do it.
 				//bot.runTradeExecutor(cycle);
 			}
 			bot = null;

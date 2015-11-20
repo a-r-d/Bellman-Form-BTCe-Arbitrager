@@ -14,7 +14,7 @@ import ninja.ard.bfcore.tradebeans.CurrencyCycle;
  * CurrencyEdge and CurrencyNode which the algorithm will then run on.
  * 
  * 
- * @author ard
+ * @author Aaron Decker
  *
  */
 public class BFAlgorithm {
@@ -25,25 +25,6 @@ public class BFAlgorithm {
 	
 	public BFAlgorithm(CurrencyGraph graph) {
 		this.graph = graph;
-	}
-
-	public void negativeCycle(String startNode) throws Exception{
-		CurrencyNode node = graph.findNode(startNode);
-		if(node == null) {
-			throw new Exception("One of the nodes provided was not found in the node map");
-		}
-		negativeCycle(node);
-	}
-	
-	/***
-	 * First runs bellman ford, then 
-	 * Computes any negative cycles containing the given node
-	 * 
-	 * @param start
-	 */
-	public void negativeCycle(CurrencyNode start) {
-		
-		
 	}
 	
 	public CurrencyCycle bellmanFord(String startNode, String endNode) throws Exception{
